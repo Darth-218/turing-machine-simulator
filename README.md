@@ -85,6 +85,31 @@ q_2, _: q_6, _, R
 - Input: TM definition.
 - Output: List of transitions leading to the input string.
 
+### Output Example
+
+```python
+tape_transitions = [
+
+  # [current_pos, [tape_charachters], current_state, next_state]
+
+    [1, ["_","0","0","1","1","_"], "q_0", "q_1"],
+    [2, ["_","X","0","1","1","_"], "q_1", "q_1"],
+    [3, ["_","X","0","1","1","_"], "q_1", "q_2"],
+    [2, ["_","X","0","Y","1","_"], "q_2", "q_2"],
+    [1, ["_","X","0","Y","1","_"], "q_2", "q_0"],
+    [2, ["_","X","0","Y","1","_"], "q_0", "q_1"],
+    [3, ["_","X","X","Y","1","_"], "q_1", "q_1"],
+    [4, ["_","X","X","Y","1","_"], "q_1", "q_2"],
+    [3, ["_","X","X","Y","Y","_"], "q_2", "q_2"],
+    [2, ["_","X","X","Y","Y","_"], "q_2", "q_2"],
+    [1, ["_","X","X","Y","Y","_"], "q_2", "q_0"],
+    [2, ["_","X","X","Y","Y","_"], "q_0", "q_0"],
+    [3, ["_","X","X","Y","Y","_"], "q_0", "q_0"],
+    [4, ["_","X","X","Y","Y","_"], "q_0", "q_0"],
+    [5, ["_","X","X","Y","Y","_"], "q_0", "q_5"],
+]
+```
+
 ### Process
 
-Applys the given transitions on the input string. Returns an error when the string is not valid.
+Applies the given transitions on the input string. Returns an error when the string is not valid.
