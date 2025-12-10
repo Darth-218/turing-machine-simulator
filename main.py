@@ -1,4 +1,5 @@
 import pandas
+import simulator, parser
 import streamlit as st
 
 st.title("Turing Machine Simulator")
@@ -11,27 +12,26 @@ input_states = st.text_area("States/Definition", height=500, placeholder=placeho
 input_string = st.text_input("Input String")
 compile = st.button("Compile")
 
-transitions = [
-    [1, ["_","0","0","1","1","_"], "q_0", "q_1"],
-    [2, ["_","X","0","1","1","_"], "q_1", "q_1"],
-    [3, ["_","X","0","1","1","_"], "q_1", "q_2"],
-    [2, ["_","X","0","Y","1","_"], "q_2", "q_2"],
-    [1, ["_","X","0","Y","1","_"], "q_2", "q_0"],
-    [2, ["_","X","0","Y","1","_"], "q_0", "q_1"],
-    [3, ["_","X","X","Y","1","_"], "q_1", "q_1"],
-    [4, ["_","X","X","Y","1","_"], "q_1", "q_2"],
-    [3, ["_","X","X","Y","Y","_"], "q_2", "q_2"],
-    [2, ["_","X","X","Y","Y","_"], "q_2", "q_2"],
-    [1, ["_","X","X","Y","Y","_"], "q_2", "q_0"],
-    [2, ["_","X","X","Y","Y","_"], "q_0", "q_0"],
-    [3, ["_","X","X","Y","Y","_"], "q_0", "q_0"],
-    [4, ["_","X","X","Y","Y","_"], "q_0", "q_0"],
-    [5, ["_","X","X","Y","Y","_"], "q_0", "q_5"],
-   ]
+if compile == True:
+    turing_machine = parser.Parser().parse(input_states)
 
-# if compile == True:
-if True:
+    st.subheader("Machine Definition")
+
+    st.markdown(rf"""
+    $$
+    M = (Q, \Sigma, \Gamma, \delta, q_0, \sqcup, F)
+    $$
+
+    - **$Q$** = {turing_machine.states}
+    - **$\Sigma$** = {turing_machine.alphabet}
+    - **$\Gamma$** = "Tape alphabet"
+    - **$q_0$** = {turing_machine.start_state}
+    - **$F$** = {turing_machine.final_states}
+    """)
+
     st.subheader("Tape Transitions")
+
+    transitions = simulator.simulate(turing_machine, input_string)
 
     for transition in transitions:
         transition[1][transition[0]] = "-" + transition[1][transition[0]] + "-"
@@ -44,6 +44,4 @@ if True:
         }])
 
         st.dataframe(df, hide_index=True)
-
-    st.subheader("Machine Definition")
 
