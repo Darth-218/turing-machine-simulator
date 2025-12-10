@@ -10,18 +10,20 @@ def prettify_transitions(transitions):
     df.columns = ["Current State", "Current Symbol", "Next State", "Written Symbol", "Direction"]
     return df
 
+
 st.title("Turing Machine Simulator")
 
-input_states = st.text_area("States/Definition", height=500, placeholder=placeholder)
+uploaded = st.file_uploader("Upload a Turing Machine Definition", type=["txt"])
+
+st.session_state["text"] = ""
+
+if uploaded:
+    st.session_state["text"] = uploaded.read().decode("utf-8")
+
+
+input_states = st.text_area("Write Turing Machine Definition", height=500, placeholder=placeholder, value=st.session_state.get("text", ""))
 input_string = st.text_input("Input String")
-
-button_cols = st.columns(2, width=190)
-
-with button_cols[0]:
-    compile = st.button("Compile")
-
-with button_cols[1]:
-    upload = st.button("Upload")
+compile = st.button("Compile")
 
 if compile == True:
     parser = parser.Parser()
