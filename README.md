@@ -59,25 +59,22 @@ Converts the input text/file into the machine's python definition.
 
 ```txt
 name: zeros-equal-ones
-init: q_0
-accept: q_5, q_6
+initial: q0
+accept: q4
 
-q_0, 0: q_1, X, R
-q_0, X: q_0, X, R
-q_0, Y: q_0, Y, R
-q_0, _: q_5, _, R
+q0, 0: q1, x, R
+q0, y: q3, y, R
 
-q_1, 0: q_1, 0, R
-q_1, X: q_1, X, R
-q_1, Y: q_1, Y, R
-q_1, 1: q_2, Y, L
-q_1, _: q_6, _, R
+q1, 0: q1, 0, R
+q1, y: q1, y, R
+q1, 1: q2, y, L
 
-q_2, X: q_2, X, L
-q_2, Y: q_2, Y, L
-q_2, 1: q_2, 1, L
-q_2, 0: q_0, 0, R
-q_2, _: q_6, _, R
+q2, y: q2, y, L
+q2, 0: q2, 0, L
+q2, x: q0, x, R
+
+q3, y: q3, y, R
+q3, _: q4, _, L
 ```
 
 ## Simulation Engine
