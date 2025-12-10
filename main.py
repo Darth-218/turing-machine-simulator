@@ -2,18 +2,30 @@ import pandas
 import simulator, parser
 import streamlit as st
 
-st.title("Turing Machine Simulator")
-
 placeholder = """// test test
 """
 
-select_preset = st.button("Upload")
+def prettify_transitions(transitions):
+    df = pandas.DataFrame(transitions)
+    df.columns = ["Current State", "Current Symbol", "Next State", "Written Symbol", "Direction"]
+    return df
+
+st.title("Turing Machine Simulator")
+
 input_states = st.text_area("States/Definition", height=500, placeholder=placeholder)
 input_string = st.text_input("Input String")
-compile = st.button("Compile")
+
+button_cols = st.columns(2, width=190)
+
+with button_cols[0]:
+    compile = st.button("Compile")
+
+with button_cols[1]:
+    upload = st.button("Upload")
 
 if compile == True:
-    turing_machine = parser.Parser().parse(input_states)
+    parser = parser.Parser()
+    turing_machine = parser.parse(input_states)
 
     st.subheader("Machine Definition")
 
@@ -23,25 +35,29 @@ if compile == True:
     $$
 
     - **$Q$** = {turing_machine.states}
-    - **$\Sigma$** = {turing_machine.alphabet}
-    - **$\Gamma$** = "Tape alphabet"
+    - **$\Gamma$** = {turing_machine.tape_alphabet}
     - **$q_0$** = {turing_machine.start_state}
     - **$F$** = {turing_machine.final_states}
+    - **$\delta$** =
     """)
+
+    st.dataframe(prettify_transitions(turing_machine.transitions), hide_index=True)
 
     st.subheader("Tape Transitions")
 
     transitions = simulator.simulate(turing_machine, input_string)
+
+    tape_container = st.container(height=300)
 
     for transition in transitions:
         transition[1][transition[0]] = "-" + transition[1][transition[0]] + "-"
 
         df = pandas.DataFrame([{
             "Head Position": transition[0],
-            "Tape": "  ".join(transition[1]),
+            "Tape": " | ".join(transition[1]),
             "Current State": transition[2],
             "Next State": transition[3],
         }])
 
-        st.dataframe(df, hide_index=True)
+        tape_container.dataframe(df, hide_index=True)
 
