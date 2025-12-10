@@ -4,23 +4,23 @@ class Tape:
         self.tape = [self.blank] + list(input_string) + [self.blank]
         self.current_position = 1
 
-        def read(self):
-            return self.tape[self.current_position]
+    def read(self):
+        return self.tape[self.current_position]
         
-        def write(self, symbol):
-            self.tape[self.current_position] = symbol
+    def write(self, symbol):
+        self.tape[self.current_position] = symbol
 
-        def move_right(self):
-            self.current_position += 1
-            if self.current_position >= len(self.tape):
-                self.tape.append(self.blank)
+    def move_right(self):
+        self.current_position += 1
+        if self.current_position >= len(self.tape):
+            self.tape.append(self.blank)
 
-        def move_left(self):
-            if self.current_position == 0:
-                self.tape.insert(0, self.blank)
+    def move_left(self):
+        if self.current_position == 0:
+            self.tape.insert(0, self.blank)
 
-            else:
-                self.current_position -= 1
+        else:
+            self.current_position -= 1
 
-        def display_tape(self):
-            return self.current_position, self.tape.copy()
+    def display_tape(self):
+        return self.current_position, self.tape.copy()
