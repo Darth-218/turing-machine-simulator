@@ -34,6 +34,8 @@ def simulate(tm: TuringMachine, input_string, max_steps=10000):
                 f"No transition for state '{current_state}' and symbol '{symbol}'. Input rejected."
             )
 
+        print(current_state, symbol, transition)
+
         next_state, write_sym, direction = transition
 
 
