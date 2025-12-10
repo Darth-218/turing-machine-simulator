@@ -50,7 +50,7 @@ def simulate(tm: TuringMachine, input_string, max_steps=10000):
         elif direction == "S":
             pass
         else:
-            raise ValueError("Unknown head direction '{}'".format(direction))
+            raise ValueError(f"Unknown head direction '{direction}'")
 
         current_state = next_state
         steps += 1
