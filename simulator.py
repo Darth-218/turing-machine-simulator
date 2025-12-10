@@ -1,21 +1,22 @@
 from tape import Tape
+from turing_machine import TuringMachine
 
 
-def build_table(tm):
+def build_table(tm: TuringMachine):
 
     table = {}
-    for s, r, ns, w, d in tm["transitions"]:
+    for s, r, ns, w, d in tm.transitions:
         table[(s, r)] = (ns, w, d)
     return table
 
 
-def simulate(tm, input_string, max_steps=10000):
+def simulate(tm: TuringMachine, input_string, max_steps=10000):
 
     tape = Tape(input_string)
     table = build_table(tm)
 
-    current_state = tm["start_state"]
-    final_states = tm["final_states"]
+    current_state = tm.start_state
+    final_states = tm.final_states
 
     transitions = []
     steps = 0
