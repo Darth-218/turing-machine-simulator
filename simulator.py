@@ -26,16 +26,16 @@ def simulate(tm, input_string, max_steps=10000):
             break
 
         symbol = tape.read()
-        key = (current_state, symbol)
+        transition = tm.get_transition(current_state, symbol)
 
-        if key not in table:
-
+        if transition is None:
             raise ValueError(
-                "No transition for state '{}' and symbol '{}'. Input rejected."
-                .format(current_state, symbol)
+                f"No transition for state '{current_state}' and symbol '{symbol}'. Input rejected."
             )
 
-        next_state, write_sym, direction = table[key]
+        next_state, write_sym, direction = transition
+
+
 
         pos, snapshot = tape.display_tape()
         transitions.append([pos, snapshot, current_state, next_state])
