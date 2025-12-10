@@ -14,7 +14,7 @@ class Parser:
             if line.startswith("name:"):
                 tm.name = line.split(":", 1)[1].strip()
 
-            elif line.startswith("init:"):
+            elif line.startswith("initial:"):
                 start = line.split(":", 1)[1].strip()
                 tm.start_state = start
                 tm.add_state(start)
