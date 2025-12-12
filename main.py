@@ -1,15 +1,15 @@
 import pandas
-import simulator, parser
+import simulator
 import streamlit as st
 
-placeholder = """// test test
+placeholder = """// To define a Turing Machine:
+name: machine_name
+init: start_state
+accept: accept_state_1, accept_state_2, ...
+
+// Machine states:
+current_state, current_symbol: next_state, written_symbol, direction
 """
-
-def prettify_transitions(transitions):
-    df = pandas.DataFrame(transitions)
-    df.columns = ["Current State", "Current Symbol", "Next State", "Written Symbol", "Direction"]
-    return df
-
 
 st.title("Turing Machine Simulator")
 
@@ -20,17 +20,24 @@ st.session_state["text"] = ""
 if uploaded:
     st.session_state["text"] = uploaded.read().decode("utf-8")
 
-
 input_states = st.text_area("Write Turing Machine Definition", height=500, placeholder=placeholder, value=st.session_state.get("text", ""))
 input_string = st.text_input("Input String")
 compile = st.button("Compile")
 
-if compile == True:
-    parser = parser.Parser()
-    turing_machine = parser.parse(input_states)
+def prettify_transitions(transitions):
+    df = pandas.DataFrame(transitions)
+    df.columns = ["Current State", "Current Symbol", "Next State", "Written Symbol", "Direction"]
+    return df
 
-    st.subheader("Machine Definition")
 
+def check_error(error):
+    if error:
+        st.badge("Input Rejected.", color='red')
+    else:
+        st.badge("Input Accepted.", color='green')
+
+
+def draw_def(turing_machine):
     st.markdown(rf"""
     $$
     M = (Q, \Sigma, \Gamma, \delta, q_0, \sqcup, F)
@@ -45,21 +52,48 @@ if compile == True:
 
     st.dataframe(prettify_transitions(turing_machine.transitions), hide_index=True)
 
-    st.subheader("Tape Transitions")
 
-    transitions = simulator.simulate(turing_machine, input_string)
-
+def tape_states(transitions, error, head_char="> "):
     tape_container = st.container(height=300)
 
-    for transition in transitions:
-        transition[1][transition[0]] = "-" + transition[1][transition[0]] + "-"
+    for position, tape, current, next in transitions:
+        tape[position] = head_char + tape[position]
 
-        df = pandas.DataFrame([{
-            "Head Position": transition[0],
-            "Tape": " | ".join(transition[1]),
-            "Current State": transition[2],
-            "Next State": transition[3],
-        }])
+        meta = {
+            "Current State": current,
+            "Next State": next,
+            "Head Position": position,
+        }
+
+        tape_dict = {f"{i}": symbol for i, symbol in enumerate(tape)}
+
+        row = {**meta, **tape_dict}
+        df = pandas.DataFrame([row])
 
         tape_container.dataframe(df, hide_index=True)
 
+    if error:
+        st.error(error)
+        tape_container.badge("Halt.", color='red')
+        return
+
+    tape_container.badge("Halt.", color='green')
+
+
+def main():
+    import parser
+    parser = parser.Parser()
+    turing_machine = parser.parse(input_states)
+    transitions, error = simulator.simulate(turing_machine, input_string)
+
+    check_error(error)
+
+    st.subheader("Machine Definition")
+    draw_def(turing_machine)
+
+    st.subheader("Tape Transitions")
+    tape_states(transitions, error)
+
+
+if compile == True:
+    main()

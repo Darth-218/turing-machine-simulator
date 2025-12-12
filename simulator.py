@@ -20,15 +20,13 @@ def simulate(tm: TuringMachine, input_string, max_steps=10000):
         transition = tm.get_transition(current_state, symbol)
 
         if transition is None:
-            raise ValueError(
-                f"No transition for state '{current_state}' and symbol '{symbol}'. Input rejected."
+            return transitions, ValueError(
+                f"No transition for state '{current_state}' and symbol '{symbol}'."
             )
 
         print(current_state, symbol, transition)
 
         next_state, write_sym, direction = transition
-
-
 
         pos, snapshot = tape.display_tape()
         transitions.append([pos, snapshot, current_state, next_state])
@@ -49,6 +47,6 @@ def simulate(tm: TuringMachine, input_string, max_steps=10000):
 
     if steps >= max_steps:
 
-        raise ValueError("Machine exceeded max steps without halting.")
+        return transitions, ValueError("Machine exceeded max steps without halting.")
 
-    return transitions
+    return transitions, None
