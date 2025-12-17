@@ -1,0 +1,12 @@
+name: even-zeros
+initial: q0
+accept: q3
+
+q0, 0: q1, x, R
+q0, _: q3, _, L
+
+q1, 0: q2, 0, R
+
+q2, 0: q1, 0, R
+q2, _: q3, _, L
+

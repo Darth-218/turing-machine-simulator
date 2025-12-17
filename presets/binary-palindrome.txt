@@ -1,0 +1,31 @@
+name: binary-palindrome
+initial: q0
+accept: q5
+
+q0, 0: q1, x, R
+q0, 1: q2, y, R
+q0, x: q0, x, R
+q0, y: q0, y, R
+
+q1, 0: q1, 0, R
+q1, 1: q1, 1, R
+q1, x: q1, x, R
+q1, y: q1, y, R
+q1, _: q3, _, L
+
+q2, 0: q2, 0, R
+q2, 1: q2, 1, R
+q2, x: q2, x, R
+q2, y: q2, y, R
+q2, _: q4, _, L
+
+q3, x: q3, x, L
+q3, y: q3, y, L
+q3, 0: q0, x, R
+
+q4, x: q4, x, L
+q4, y: q4, y, L
+q4, 1: q0, y, R
+
+q0, _: q5, _, L
+
